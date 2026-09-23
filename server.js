@@ -8,6 +8,12 @@ const PORT = 3000;
 const CATEGORIES = ['facilities', 'it', 'hr', 'other'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
 const STATUSES = ['open', 'in_progress', 'resolved', 'closed'];
+const ALLOWED_TRANSITIONS = {
+  open: ['in_progress'],
+  in_progress: ['resolved'],
+  resolved: ['closed'],
+  closed: [],
+};
 
 const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
 
@@ -125,6 +131,45 @@ app.patch('/api/requests/:id', async (req, res) => {
   }
   if (assignedTo !== undefined && !hasText(assignedTo)) {
     return res.status(400).json({ error: 'assignedTo cannot be empty' });
+  }
+    if (status !== undefined) {
+    const currentResult = await pool.query(
+      'SELECT status FROM requests WHERE id = $1',
+      [id],
+    );
+
+    if (currentResult.rowCount === 0) {
+      return res.status(404).json({ error: 'request not found' });
+    }
+
+    const currentStatus = currentResult.rows[0].status;
+    const isNoChange = status === currentStatus;
+    const isAllowed = ALLOWED_TRANSITIONS[currentStatus].includes(status);
+
+    if (!isNoChange && !isAllowed) {
+      return res.status(409).json({
+        error: `cannot move request from ${currentStatus} to ${status}`,
+      });
+    }
+  }  if (status !== undefined) {
+    const currentResult = await pool.query(
+      'SELECT status FROM requests WHERE id = $1',
+      [id],
+    );
+
+    if (currentResult.rowCount === 0) {
+      return res.status(404).json({ error: 'request not found' });
+    }
+
+    const currentStatus = currentResult.rows[0].status;
+    const isNoChange = status === currentStatus;
+    const isAllowed = ALLOWED_TRANSITIONS[currentStatus].includes(status);
+
+    if (!isNoChange && !isAllowed) {
+      return res.status(409).json({
+        error: `cannot move request from ${currentStatus} to ${status}`,
+      });
+    }
   }
 
   const result = await pool.query(
