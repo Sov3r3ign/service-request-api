@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service requests</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Service requests</h1>
+    <button class="btn primary" type="button" id="new-btn">New request</button>
+  </header>
+
+  <main>
+    <dl class="stats" id="stats" aria-label="Summary"></dl>
+
+    <form class="filters" id="filters" role="search" autocomplete="off">
+      <div class="field grow">
+        <label for="f-search">Search</label>
+        <input id="f-search" name="search" type="search" placeholder="Title or description">
+      </div>
+      <div class="field">
+        <label for="f-status">Status</label>
+        <select id="f-status" name="status" data-options="status" data-all="All statuses"></select>
+      </div>
+      <div class="field">
+        <label for="f-priority">Priority</label>
+        <select id="f-priority" name="priority" data-options="priority" data-all="All priorities"></select>
+      </div>
+      <div class="field">
+        <label for="f-category">Category</label>
+        <select id="f-category" name="category" data-options="category" data-all="All categories"></select>
+      </div>
+      <button class="btn ghost" type="reset">Clear</button>
+    </form>
+
+    <p class="count" id="count" aria-live="polite"></p>
+    <ul class="list" id="list"></ul>
+  </main>
+
+  <dialog id="new-dialog" aria-labelledby="new-heading">
+    <form id="new-form">
+      <h2 id="new-heading">New request</h2>
+      <div class="field">
+        <label for="n-title">Title</label>
+        <input id="n-title" name="title" required minlength="3" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="n-desc">Description</label>
+        <textarea id="n-desc" name="description" rows="5" required minlength="3" maxlength="2000"></textarea>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="n-category">Category</label>
+          <select id="n-category" name="category" data-options="category" required></select>
+        </div>
+        <div class="field">
+          <label for="n-priority">Priority</label>
+          <select id="n-priority" name="priority" data-options="priority" data-default="medium"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="n-name">Your name</label>
+        <input id="n-name" name="requesterName" required minlength="2" maxlength="100" autocomplete="name">
+      </div>
+      <p class="form-error" role="alert" hidden></p>
+      <div class="actions">
+        <button class="btn" type="button" data-close>Cancel</button>
+        <button class="btn primary" type="submit">Create request</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="detail-dialog" aria-labelledby="detail-heading">
+    <form id="detail-form">
+      <h2 id="detail-heading"></h2>
+      <p class="muted" id="detail-sub"></p>
+
+      <div class="status-block">
+        <div id="detail-pipe"></div>
+        <div class="status-action">
+          <button class="btn" type="button" id="advance"></button>
+          <p class="muted" id="advance-note"></p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="d-title">Title</label>
+        <input id="d-title" name="title" required minlength="3" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="d-desc">Description</label>
+        <textarea id="d-desc" name="description" rows="5" required minlength="3" maxlength="2000"></textarea>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="d-category">Category</label>
+          <select id="d-category" name="category" data-options="category"></select>
+        </div>
+        <div class="field">
+          <label for="d-priority">Priority</label>
+          <select id="d-priority" name="priority" data-options="priority"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="d-assigned">Assigned to</label>
+        <input id="d-assigned" name="assignedTo" maxlength="100" placeholder="Nobody yet">
+      </div>
+      <p class="form-error" role="alert" hidden></p>
+      <div class="actions">
+        <button class="btn" type="button" data-close>Close</button>
+        <button class="btn primary" type="submit">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
