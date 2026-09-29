@@ -3,7 +3,10 @@ import { Pool } from 'pg';
 import { fileURLToPath } from 'node:url';
 
 const app = express();
-const pool = new Pool();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+});
 const PORT = 3000;
 
 const CATEGORIES = ['facilities', 'it', 'hr', 'other'];
