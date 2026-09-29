@@ -1,5 +1,6 @@
 import express from 'express';
 import { Pool } from 'pg';
+import { fileURLToPath } from 'node:url';
 
 const app = express();
 const pool = new Pool();
@@ -19,6 +20,7 @@ const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
 
 app.disable('x-powered-by');
 app.use(express.json());
+app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))));
 
 app.get('/health', async (_req, res) => {
   const result = await pool.query('SELECT CURRENT_TIMESTAMP AS database_time');
